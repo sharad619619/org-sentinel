@@ -104,24 +104,27 @@
 
   .btn-primary {
     @apply px-6 py-3 rounded-lg font-medium transition-all duration-300;
-    background-image: var(--gradient-primary);
-    color: hsl(var(--foreground));
+    background: hsl(var(--primary));
+    color: hsl(225 50% 15%);
   }
 
   .btn-primary:hover {
-    box-shadow: var(--glow-primary);
+    background: hsl(24 85% 45%);
+    box-shadow: 0 4px 20px -4px hsl(24 85% 52% / 0.4);
     transform: translateY(-1px);
   }
 
   .btn-outline-glow {
     @apply px-6 py-3 rounded-lg font-medium border transition-all duration-300;
-    border-color: var(--glass-border);
-    color: hsl(var(--foreground));
+    background: hsl(30 30% 94%);
+    border-color: hsl(var(--primary));
+    color: hsl(225 50% 18%);
   }
 
   .btn-outline-glow:hover {
-    border-color: hsl(var(--primary));
-    box-shadow: var(--glow-primary);
+    background: hsl(24 85% 52% / 0.1);
+    border-color: hsl(24 85% 45%);
+    box-shadow: 0 4px 20px -4px hsl(24 85% 52% / 0.25);
     transform: translateY(-1px);
   }
 
