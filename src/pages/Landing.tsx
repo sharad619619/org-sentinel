@@ -20,7 +20,7 @@ const NetworkGraph = () => (
       {/* Nodes */}
       {[[100,100],[400,200],[700,150],[300,400],[600,450],[200,350],[650,400]].map(([cx,cy], i) => (
         <motion.circle
-          key={i} cx={cx} cy={cy} r="4" fill="hsl(217,91%,60%)"
+          key={i} cx={cx} cy={cy} r="4" fill="hsl(225,50%,25%)"
           animate={{ r: [3,5,3], opacity: [0.4,0.8,0.4] }}
           transition={{ duration: 2, delay: i * 0.4, repeat: Infinity }}
         />
