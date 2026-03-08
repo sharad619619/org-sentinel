@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Shield } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import logo from "@/assets/org-sentinel-logo.jpeg";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -23,7 +24,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2 group">
-            <Shield className="w-7 h-7 text-primary transition-all group-hover:drop-shadow-[0_0_8px_hsl(217,91%,60%)]" />
+            <img src={logo} alt="OrgSentinel" className="h-10 w-auto" />
             <span className="font-display font-bold text-lg text-foreground">OrgSentinel</span>
           </Link>
 
