@@ -62,9 +62,9 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         electric: {
-          blue: "#3B82F6",
-          purple: "#8B5CF6",
-          cyan: "#06B6D4",
+          blue: "#2B3A67",
+          orange: "#E8722A",
+          navy: "#1E2D5B",
         },
       },
       borderRadius: {

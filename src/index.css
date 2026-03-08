@@ -6,54 +6,54 @@
 
 @layer base {
   :root {
-    --background: 222 47% 7%;
+    --background: 225 40% 8%;
     --foreground: 210 40% 93%;
 
-    --card: 222 47% 10%;
+    --card: 225 40% 11%;
     --card-foreground: 210 40% 93%;
 
-    --popover: 222 47% 10%;
+    --popover: 225 40% 11%;
     --popover-foreground: 210 40% 93%;
 
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 7%;
+    --primary: 24 90% 55%;
+    --primary-foreground: 225 50% 12%;
 
-    --secondary: 263 70% 58%;
+    --secondary: 225 60% 35%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 222 30% 14%;
+    --muted: 225 30% 15%;
     --muted-foreground: 215 20% 55%;
 
-    --accent: 188 95% 43%;
-    --accent-foreground: 222 47% 7%;
+    --accent: 24 90% 55%;
+    --accent-foreground: 225 50% 12%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 222 30% 18%;
-    --input: 222 30% 18%;
-    --ring: 217 91% 60%;
+    --border: 225 30% 18%;
+    --input: 225 30% 18%;
+    --ring: 24 90% 55%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 222 47% 7%;
+    --sidebar-background: 225 40% 8%;
     --sidebar-foreground: 210 40% 93%;
-    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary: 24 90% 55%;
     --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 222 30% 14%;
+    --sidebar-accent: 225 30% 15%;
     --sidebar-accent-foreground: 210 40% 93%;
-    --sidebar-border: 222 30% 18%;
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-border: 225 30% 18%;
+    --sidebar-ring: 24 90% 55%;
 
     /* Custom tokens */
-    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(263 70% 58%));
-    --gradient-accent: linear-gradient(135deg, hsl(263 70% 58%), hsl(188 95% 43%));
-    --gradient-full: linear-gradient(135deg, hsl(217 91% 60%), hsl(263 70% 58%), hsl(188 95% 43%));
-    --glow-primary: 0 0 60px -12px hsl(217 91% 60% / 0.4);
-    --glow-secondary: 0 0 60px -12px hsl(263 70% 58% / 0.4);
-    --glow-accent: 0 0 60px -12px hsl(188 95% 43% / 0.4);
-    --glass-bg: hsl(222 30% 14% / 0.5);
-    --glass-border: hsl(222 30% 30% / 0.3);
+    --gradient-primary: linear-gradient(135deg, hsl(24 90% 55%), hsl(225 60% 35%));
+    --gradient-accent: linear-gradient(135deg, hsl(225 60% 35%), hsl(24 80% 60%));
+    --gradient-full: linear-gradient(135deg, hsl(24 90% 55%), hsl(225 60% 35%), hsl(24 80% 45%));
+    --glow-primary: 0 0 60px -12px hsl(24 90% 55% / 0.4);
+    --glow-secondary: 0 0 60px -12px hsl(225 60% 35% / 0.4);
+    --glow-accent: 0 0 60px -12px hsl(24 80% 60% / 0.4);
+    --glass-bg: hsl(225 30% 14% / 0.5);
+    --glass-border: hsl(225 30% 30% / 0.3);
   }
 }
 
