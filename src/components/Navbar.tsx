@@ -23,9 +23,8 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/50" style={{ background: "hsl(222 47% 7% / 0.8)", backdropFilter: "blur(20px)" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2 group">
-            <img src={logo} alt="OrgSentinel" className="h-10 w-auto" />
-            <span className="font-display font-bold text-lg text-foreground">OrgSentinel</span>
+          <Link to="/" className="flex items-center mr-6">
+            <img src={logo} alt="OrgSentinel" className="h-[42px] w-auto" />
           </Link>
 
           <div className="hidden lg:flex items-center gap-1">
