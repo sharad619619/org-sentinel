@@ -104,27 +104,27 @@
 
   .btn-primary {
     @apply px-6 py-3 rounded-lg font-medium transition-all duration-300;
-    background: hsl(var(--primary));
-    color: hsl(225 50% 15%);
+    background: #F28C38;
+    color: #ffffff;
   }
 
   .btn-primary:hover {
-    background: hsl(24 85% 45%);
-    box-shadow: 0 4px 20px -4px hsl(24 85% 52% / 0.4);
+    background: #E07A2F;
+    box-shadow: 0 4px 20px -4px rgba(242, 140, 56, 0.4);
     transform: translateY(-1px);
   }
 
   .btn-outline-glow {
     @apply px-6 py-3 rounded-lg font-medium border transition-all duration-300;
-    background: hsl(30 30% 94%);
-    border-color: hsl(var(--primary));
-    color: hsl(225 50% 18%);
+    background: transparent;
+    border-color: #F28C38;
+    color: #1E2A3A;
   }
 
   .btn-outline-glow:hover {
-    background: hsl(24 85% 52% / 0.1);
-    border-color: hsl(24 85% 45%);
-    box-shadow: 0 4px 20px -4px hsl(24 85% 52% / 0.25);
+    background: rgba(242, 140, 56, 0.08);
+    border-color: #E07A2F;
+    box-shadow: 0 4px 20px -4px rgba(242, 140, 56, 0.25);
     transform: translateY(-1px);
   }
 
