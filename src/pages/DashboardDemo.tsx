@@ -130,7 +130,7 @@ const DashboardDemo = () => {
                       return (
                         <motion.line
                           key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-                          stroke="hsl(217,91%,60%)" strokeWidth="1.5" strokeOpacity="0.3"
+                          stroke="hsl(225,50%,25%)" strokeWidth="1.5" strokeOpacity="0.3"
                           initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
                           transition={{ duration: 1, delay: i * 0.1 }}
                         />
@@ -141,8 +141,8 @@ const DashboardDemo = () => {
                         initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
                         transition={{ delay: 0.5 + i * 0.1 }}
                       >
-                        <circle cx={node.x} cy={node.y} r="28" fill="hsl(222,30%,14%)" stroke={riskColor(node.risk)} strokeWidth="2" />
-                        <text x={node.x} y={node.y + 1} textAnchor="middle" dominantBaseline="middle" fill="hsl(210,40%,93%)" fontSize="10" fontFamily="Inter">
+                        <circle cx={node.x} cy={node.y} r="28" fill="hsl(30,30%,96%)" stroke={riskColor(node.risk)} strokeWidth="2" />
+                        <text x={node.x} y={node.y + 1} textAnchor="middle" dominantBaseline="middle" fill="hsl(225,50%,18%)" fontSize="10" fontFamily="Inter">
                           {node.label.length > 12 ? node.label.slice(0, 11) + "…" : node.label}
                         </text>
                       </motion.g>

@@ -20,16 +20,16 @@ const NetworkGraph = () => (
       {/* Nodes */}
       {[[100,100],[400,200],[700,150],[300,400],[600,450],[200,350],[650,400]].map(([cx,cy], i) => (
         <motion.circle
-          key={i} cx={cx} cy={cy} r="4" fill="hsl(217,91%,60%)"
+          key={i} cx={cx} cy={cy} r="4" fill="hsl(225,50%,25%)"
           animate={{ r: [3,5,3], opacity: [0.4,0.8,0.4] }}
           transition={{ duration: 2, delay: i * 0.4, repeat: Infinity }}
         />
       ))}
       <defs>
         <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#3B82F6" />
-          <stop offset="50%" stopColor="#8B5CF6" />
-          <stop offset="100%" stopColor="#06B6D4" />
+          <stop offset="0%" stopColor="hsl(24, 85%, 52%)" />
+          <stop offset="50%" stopColor="hsl(225, 50%, 25%)" />
+          <stop offset="100%" stopColor="hsl(24, 75%, 58%)" />
         </linearGradient>
       </defs>
     </svg>
@@ -48,17 +48,17 @@ const problems = [
 const impacts = [
   {
     title: "Economic Impact",
-    color: "from-electric-blue to-electric-purple",
+    color: "from-primary to-secondary",
     items: ["Prevent costly internal breaches", "Reduce compliance penalties", "Increase investor confidence"],
   },
   {
     title: "Operational Impact",
-    color: "from-electric-purple to-electric-cyan",
+    color: "from-secondary to-primary",
     items: ["Enable safe startup scaling", "Prevent privilege sprawl", "Improve infrastructure governance"],
   },
   {
     title: "Social Impact",
-    color: "from-electric-cyan to-electric-blue",
+    color: "from-primary to-secondary",
     items: ["Strengthen data privacy protection", "Promote responsible access culture", "Build trust with stakeholders"],
   },
 ];
@@ -70,8 +70,8 @@ const Landing = () => {
       <section className="relative min-h-[90vh] flex items-center grid-bg overflow-hidden">
         <NetworkGraph />
         {/* Glow orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-electric-blue/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-electric-purple/10 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-[120px]" />
 
         <div className="section-padding relative z-10 text-center">
           <motion.div
@@ -168,7 +168,7 @@ const Landing = () => {
       {/* CTA */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-electric-blue/5 rounded-full blur-[120px]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]" />
         </div>
         <div className="section-padding relative text-center">
           <AnimatedSection>
