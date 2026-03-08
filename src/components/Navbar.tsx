@@ -47,7 +47,7 @@ const Navbar = () => {
             <Link to="/contact" className="btn-outline-glow text-sm !px-4 !py-2">
               Contact Sales
             </Link>
-            <Link to="/dashboard-demo" className="btn-primary text-sm !px-4 !py-2">
+            <Link to="/simulate" className="btn-primary text-sm !px-4 !py-2">
               Start Simulation
             </Link>
           </div>
