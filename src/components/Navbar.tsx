@@ -83,7 +83,7 @@ const Navbar = () => {
                 </Link>
               ))}
               <div className="pt-4 space-y-2">
-                <Link to="/dashboard-demo" onClick={() => setMobileOpen(false)} className="btn-primary block text-center text-sm">
+                <Link to="/simulate" onClick={() => setMobileOpen(false)} className="btn-primary block text-center text-sm">
                   Start Simulation
                 </Link>
               </div>
