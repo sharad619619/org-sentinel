@@ -95,7 +95,7 @@ const Landing = () => {
               "In a world obsessed with external threats, we built the system that protects you from yourself."
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/dashboard-demo" className="btn-primary text-base flex items-center justify-center gap-2">
+              <Link to="/simulate" className="btn-primary text-base flex items-center justify-center gap-2">
                 Start Simulation <ArrowRight className="w-4 h-4" />
               </Link>
               <Link to="/dashboard-demo" className="btn-outline-glow text-base">
@@ -179,7 +179,7 @@ const Landing = () => {
               Discover vulnerabilities in your organization before they become incidents.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/dashboard-demo" className="btn-primary flex items-center justify-center gap-2">
+              <Link to="/simulate" className="btn-primary flex items-center justify-center gap-2">
                 Start Simulation <ArrowRight className="w-4 h-4" />
               </Link>
               <Link to="/pricing" className="btn-outline-glow">

@@ -1,33 +1,31 @@
+import { useMemo } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import Layout from "@/components/Layout";
 import AnimatedSection from "@/components/AnimatedSection";
+import { useSimulation } from "@/context/SimulationContext";
 
-const nodes = [
-  { id: "intern", label: "Intern", x: 80, y: 120, risk: "high" },
-  { id: "admin", label: "Admin", x: 250, y: 60, risk: "medium" },
-  { id: "vendor", label: "Vendor", x: 420, y: 130, risk: "high" },
-  { id: "custdb", label: "Customer DB", x: 130, y: 280, risk: "high" },
-  { id: "github", label: "GitHub Repo", x: 310, y: 220, risk: "medium" },
-  { id: "payment", label: "Payment System", x: 450, y: 300, risk: "low" },
+const DEFAULT_NODES = [
+  { id: "intern", label: "Intern", type: "user" as const, risk: "high" },
+  { id: "admin", label: "Admin", type: "user" as const, risk: "medium" },
+  { id: "vendor", label: "Vendor", type: "user" as const, risk: "high" },
+  { id: "custdb", label: "Customer DB", type: "resource" as const, risk: "high" },
+  { id: "github", label: "GitHub Repo", type: "resource" as const, risk: "medium" },
+  { id: "payment", label: "Payment System", type: "resource" as const, risk: "low" },
 ];
 
-const edges = [
-  ["intern", "custdb"], ["intern", "github"], ["admin", "custdb"], ["admin", "github"],
-  ["admin", "payment"], ["vendor", "github"], ["vendor", "payment"], ["custdb", "payment"],
+const DEFAULT_EDGES = [
+  { from: "intern", to: "custdb", permission: "read" },
+  { from: "intern", to: "github", permission: "read" },
+  { from: "admin", to: "custdb", permission: "admin" },
+  { from: "admin", to: "github", permission: "write" },
+  { from: "admin", to: "payment", permission: "admin" },
+  { from: "vendor", to: "github", permission: "write" },
+  { from: "vendor", to: "payment", permission: "read" },
 ];
 
-const riskColor = (r: string) => r === "high" ? "#EF4444" : r === "medium" ? "#F59E0B" : "#22C55E";
-
-const scenarios = [
-  { text: "Intern exported customer data to personal device", risk: "Critical" },
-  { text: "Vendor API key reused in production", risk: "High" },
-  { text: "Ex-employee access remained active for 90 days", risk: "High" },
-  { text: "Admin overlap caused critical deletion", risk: "Critical" },
-  { text: "Cloud storage bucket was publicly exposed", risk: "Medium" },
-  { text: "Unreviewed code pushed directly to production", risk: "Medium" },
-];
-
-const heatmapData = [
+const DEFAULT_HEATMAP = [
   { label: "Customer DB", risk: 92, color: "#EF4444" },
   { label: "Payment System", risk: 45, color: "#F59E0B" },
   { label: "GitHub Repo", risk: 67, color: "#F59E0B" },
@@ -36,21 +34,84 @@ const heatmapData = [
   { label: "API Gateway", risk: 34, color: "#22C55E" },
 ];
 
+const DEFAULT_SCENARIOS = [
+  { text: "Intern exported customer data to personal device", risk: "Critical" },
+  { text: "Vendor API key reused in production", risk: "High" },
+  { text: "Ex-employee access remained active for 90 days", risk: "High" },
+  { text: "Admin overlap caused critical deletion", risk: "Critical" },
+  { text: "Cloud storage bucket was publicly exposed", risk: "Medium" },
+  { text: "Unreviewed code pushed directly to production", risk: "Medium" },
+];
+
+const riskColor = (r: string) => r === "high" ? "#EF4444" : r === "medium" ? "#F59E0B" : "#22C55E";
+
+// Simple force-style layout for dynamic nodes
+function layoutNodes(nodes: { id: string; label: string; type: string; risk: string }[]) {
+  const users = nodes.filter(n => n.type === "user");
+  const resources = nodes.filter(n => n.type === "resource");
+  const positioned: { id: string; label: string; risk: string; x: number; y: number }[] = [];
+
+  users.forEach((u, i) => {
+    const angle = (Math.PI / (users.length + 1)) * (i + 1);
+    positioned.push({ ...u, x: 80 + i * (400 / Math.max(users.length - 1, 1)), y: 50 + Math.sin(angle) * 60 });
+  });
+
+  resources.forEach((r, i) => {
+    positioned.push({ ...r, x: 60 + i * (420 / Math.max(resources.length - 1, 1)), y: 220 + (i % 2) * 60 });
+  });
+
+  return positioned;
+}
+
 const DashboardDemo = () => {
-  const nodeMap = Object.fromEntries(nodes.map(n => [n.id, n]));
+  const { result } = useSimulation();
+  const isLive = !!result;
+
+  const graphNodes = useMemo(() => {
+    if (result) return layoutNodes(result.nodes);
+    return DEFAULT_NODES.map((n, i) => ({
+      ...n,
+      x: [80, 250, 420, 130, 310, 450][i],
+      y: [120, 60, 130, 280, 220, 300][i],
+    }));
+  }, [result]);
+
+  const graphEdges = useMemo(() => result?.edges ?? DEFAULT_EDGES, [result]);
+  const heatmap = useMemo(() => result?.heatmap ?? DEFAULT_HEATMAP, [result]);
+  const scenarios = useMemo(() => result?.scenarios ?? DEFAULT_SCENARIOS, [result]);
+  const blastRadius = result?.blastRadius ?? 72;
+
+  const nodeMap = Object.fromEntries(graphNodes.map(n => [n.id, n]));
 
   return (
     <Layout>
       <section className="relative">
         <div className="section-padding">
           <AnimatedSection className="text-center mb-12">
-            <p className="text-sm font-medium text-primary mb-2 tracking-widest uppercase">Live Demo</p>
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <p className="text-sm font-medium text-primary tracking-widest uppercase">
+                {isLive ? "Live Simulation" : "Live Demo"}
+              </p>
+              {isLive && (
+                <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-0.5 rounded-full bg-green-500/20 text-green-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                  Dynamic
+                </span>
+              )}
+            </div>
             <h1 className="font-display text-4xl sm:text-5xl font-bold mb-4">
               Risk <span className="gradient-text">Dashboard</span>
             </h1>
-            <p className="text-muted-foreground max-w-xl mx-auto">
-              Interactive prototype showing how OrgSentinel visualizes internal risk.
+            <p className="text-muted-foreground max-w-xl mx-auto mb-6">
+              {isLive
+                ? "Results generated from your uploaded organization data."
+                : "Interactive prototype showing how OrgSentinel visualizes internal risk."}
             </p>
+            {!isLive && (
+              <Link to="/simulate" className="btn-primary inline-flex items-center gap-2 text-sm">
+                Run Your Own Simulation <ArrowRight className="w-4 h-4" />
+              </Link>
+            )}
           </AnimatedSection>
 
           {/* Top row: Graph + Heatmap */}
@@ -63,8 +124,9 @@ const DashboardDemo = () => {
                 </h3>
                 <div className="relative bg-muted/20 rounded-lg overflow-hidden" style={{ height: 360 }}>
                   <svg width="100%" height="100%" viewBox="0 0 530 370" className="p-4">
-                    {edges.map(([from, to], i) => {
-                      const a = nodeMap[from], b = nodeMap[to];
+                    {graphEdges.map((edge, i) => {
+                      const a = nodeMap[edge.from], b = nodeMap[edge.to];
+                      if (!a || !b) return null;
                       return (
                         <motion.line
                           key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y}
@@ -74,13 +136,15 @@ const DashboardDemo = () => {
                         />
                       );
                     })}
-                    {nodes.map((node, i) => (
+                    {graphNodes.map((node, i) => (
                       <motion.g key={node.id}
                         initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
                         transition={{ delay: 0.5 + i * 0.1 }}
                       >
                         <circle cx={node.x} cy={node.y} r="28" fill="hsl(222,30%,14%)" stroke={riskColor(node.risk)} strokeWidth="2" />
-                        <text x={node.x} y={node.y + 1} textAnchor="middle" dominantBaseline="middle" fill="hsl(210,40%,93%)" fontSize="10" fontFamily="Inter">{node.label}</text>
+                        <text x={node.x} y={node.y + 1} textAnchor="middle" dominantBaseline="middle" fill="hsl(210,40%,93%)" fontSize="10" fontFamily="Inter">
+                          {node.label.length > 12 ? node.label.slice(0, 11) + "…" : node.label}
+                        </text>
                       </motion.g>
                     ))}
                   </svg>
@@ -95,7 +159,7 @@ const DashboardDemo = () => {
                   <div className="w-2 h-2 rounded-full bg-secondary" /> Risk Heatmap
                 </h3>
                 <div className="space-y-4">
-                  {heatmapData.map((item, i) => (
+                  {heatmap.map((item, i) => (
                     <div key={i}>
                       <div className="flex justify-between text-sm mb-1">
                         <span className="text-foreground">{item.label}</span>
@@ -120,12 +184,12 @@ const DashboardDemo = () => {
                   <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wider">Blast Radius Score</p>
                   <motion.p
                     className="font-display text-4xl font-bold"
-                    style={{ color: "#F59E0B" }}
+                    style={{ color: blastRadius >= 70 ? "#EF4444" : blastRadius >= 40 ? "#F59E0B" : "#22C55E" }}
                     initial={{ opacity: 0, scale: 0.5 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                   >
-                    72 <span className="text-lg text-muted-foreground font-normal">/ 100</span>
+                    {blastRadius} <span className="text-lg text-muted-foreground font-normal">/ 100</span>
                   </motion.p>
                 </div>
               </div>
@@ -163,6 +227,18 @@ const DashboardDemo = () => {
               </div>
             </div>
           </AnimatedSection>
+
+          {/* Action buttons */}
+          <div className="mt-8 text-center flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/simulate" className="btn-primary inline-flex items-center justify-center gap-2">
+              {isLive ? "Run New Simulation" : "Start Simulation"} <ArrowRight className="w-4 h-4" />
+            </Link>
+            {isLive && (
+              <Link to="/dashboard-demo" className="btn-outline-glow" onClick={() => window.location.reload()}>
+                View Static Demo
+              </Link>
+            )}
+          </div>
         </div>
       </section>
     </Layout>
