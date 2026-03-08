@@ -1,14 +1,13 @@
 import { Link } from "react-router-dom";
-import { Shield } from "lucide-react";
+import logo from "@/assets/org-sentinel-logo.jpeg";
 
 const Footer = () => (
   <footer className="border-t border-border/50 bg-muted/20">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
         <div className="col-span-2 md:col-span-1">
-          <Link to="/" className="flex items-center gap-2 mb-4">
-            <Shield className="w-6 h-6 text-primary" />
-            <span className="font-display font-bold text-foreground">OrgSentinel</span>
+          <Link to="/" className="inline-block mb-4">
+            <img src={logo} alt="OrgSentinel" className="h-10 w-auto" />
           </Link>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Predict internal security failures before they happen. Built for modern startups.
