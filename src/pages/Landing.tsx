@@ -70,8 +70,8 @@ const Landing = () => {
       <section className="relative min-h-[90vh] flex items-center grid-bg overflow-hidden">
         <NetworkGraph />
         {/* Glow orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-electric-blue/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-electric-purple/10 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-[120px]" />
 
         <div className="section-padding relative z-10 text-center">
           <motion.div
