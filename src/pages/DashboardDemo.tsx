@@ -130,7 +130,7 @@ const DashboardDemo = () => {
                       return (
                         <motion.line
                           key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-                          stroke="hsl(217,91%,60%)" strokeWidth="1.5" strokeOpacity="0.3"
+                          stroke="hsl(225,50%,25%)" strokeWidth="1.5" strokeOpacity="0.3"
                           initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
                           transition={{ duration: 1, delay: i * 0.1 }}
                         />

@@ -65,7 +65,7 @@ const Navbar = () => {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             className="lg:hidden overflow-hidden border-t border-border/50"
-            style={{ background: "hsl(222 47% 7% / 0.95)" }}
+            style={{ background: "hsl(30 40% 93% / 0.97)" }}
           >
             <div className="px-4 py-4 space-y-1">
               {navLinks.map((link) => (
