@@ -27,9 +27,9 @@ const NetworkGraph = () => (
       ))}
       <defs>
         <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#3B82F6" />
-          <stop offset="50%" stopColor="#8B5CF6" />
-          <stop offset="100%" stopColor="#06B6D4" />
+          <stop offset="0%" stopColor="hsl(24, 85%, 52%)" />
+          <stop offset="50%" stopColor="hsl(225, 50%, 25%)" />
+          <stop offset="100%" stopColor="hsl(24, 75%, 58%)" />
         </linearGradient>
       </defs>
     </svg>
