@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Shield } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import logo from "@/assets/org-sentinel-logo.jpeg";
 
 const navLinks = [
   { to: "/", label: "Home" },
