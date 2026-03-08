@@ -48,17 +48,17 @@ const problems = [
 const impacts = [
   {
     title: "Economic Impact",
-    color: "from-electric-blue to-electric-purple",
+    color: "from-primary to-secondary",
     items: ["Prevent costly internal breaches", "Reduce compliance penalties", "Increase investor confidence"],
   },
   {
     title: "Operational Impact",
-    color: "from-electric-purple to-electric-cyan",
+    color: "from-secondary to-primary",
     items: ["Enable safe startup scaling", "Prevent privilege sprawl", "Improve infrastructure governance"],
   },
   {
     title: "Social Impact",
-    color: "from-electric-cyan to-electric-blue",
+    color: "from-primary to-secondary",
     items: ["Strengthen data privacy protection", "Promote responsible access culture", "Build trust with stakeholders"],
   },
 ];
