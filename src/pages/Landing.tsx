@@ -79,10 +79,13 @@ const Landing = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 max-w-5xl mx-auto">
-              Predict Internal Security Failures{" "}
-              <span className="gradient-text">Before They Happen</span>
+            <h1 className="font-display text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight mb-4 gradient-text">
+              ORG SENTINEL
             </h1>
+            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight mb-6 max-w-4xl mx-auto text-foreground/90">
+              Predict Internal Security Failures{" "}
+              <span className="text-primary">Before They Happen</span>
+            </h2>
             <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 leading-relaxed">
               Most security tools detect attacks after damage occurs.
               OrgSentinel predicts how normal human actions can break your system.
