@@ -79,10 +79,6 @@ const Landing = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <div className="inline-flex items-center gap-2 glass-card px-4 py-2 mb-8 text-sm text-muted-foreground">
-              <Shield className="w-4 h-4 text-primary" />
-              Internal Risk Simulation Engine
-            </div>
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 max-w-5xl mx-auto">
               Predict Internal Security Failures{" "}
               <span className="gradient-text">Before They Happen</span>
