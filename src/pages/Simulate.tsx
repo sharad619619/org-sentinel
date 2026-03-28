@@ -1,192 +1,199 @@
-import { useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Upload, Plus, Trash2, Play, FileSpreadsheet, PenTool } from "lucide-react";
-import Papa from "papaparse";
+import { Play, Plug, Wifi, Database, ArrowRight, Loader2, CheckCircle2, AlertTriangle } from "lucide-react";
 import Layout from "@/components/Layout";
 import AnimatedSection from "@/components/AnimatedSection";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { useSimulation, AccessEntry } from "@/context/SimulationContext";
+import { useIntegrations } from "@/context/IntegrationContext";
 import { runSimulation } from "@/lib/simulationEngine";
+import { fetchMockAccessEntries } from "@/lib/mockApiData";
 import { useToast } from "@/hooks/use-toast";
 
-const DEMO_ROLES = ["Intern", "Admin", "Vendor", "Employee"];
-const DEMO_RESOURCES = ["Customer Database", "GitHub Repo", "Payment System", "Cloud Storage", "Auth Service"];
-const PERMISSIONS = ["read", "write", "admin"];
-
-const DEMO_ENTRIES: AccessEntry[] = [
-  { userId: "u1", role: "Intern", resource: "Customer Database", permission: "read" },
-  { userId: "u2", role: "Admin", resource: "Payment System", permission: "admin" },
-  { userId: "u3", role: "Vendor", resource: "GitHub Repo", permission: "write" },
-  { userId: "u4", role: "Employee", resource: "Cloud Storage", permission: "read" },
-  { userId: "u2", role: "Admin", resource: "Customer Database", permission: "admin" },
-  { userId: "u3", role: "Vendor", resource: "Payment System", permission: "read" },
-  { userId: "u1", role: "Intern", resource: "GitHub Repo", permission: "read" },
-];
-
 const Simulate = () => {
-  const [mode, setMode] = useState<"csv" | "manual">("manual");
   const [entries, setEntries] = useState<AccessEntry[]>([]);
-  const [newEntry, setNewEntry] = useState<AccessEntry>({ userId: "", role: DEMO_ROLES[0], resource: DEMO_RESOURCES[0], permission: PERMISSIONS[0] });
   const [running, setRunning] = useState(false);
+  const [fetching, setFetching] = useState(false);
   const { setResult } = useSimulation();
+  const { integrations, connectedCount, mode, setMode, dataHealth } = useIntegrations();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleCSV = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    Papa.parse<Record<string, string>>(file, {
-      header: true,
-      skipEmptyLines: true,
-      complete: (results) => {
-        const parsed: AccessEntry[] = results.data
-          .filter(r => r.user_id && r.role && r.resource && r.permission)
-          .map(r => ({ userId: r.user_id, role: r.role, resource: r.resource, permission: r.permission }));
-        if (parsed.length === 0) {
-          toast({ title: "Invalid CSV", description: "Ensure columns: user_id, role, resource, permission", variant: "destructive" });
-          return;
-        }
-        setEntries(parsed);
-        toast({ title: "CSV Loaded", description: `${parsed.length} access entries parsed.` });
-      },
-    });
-  }, [toast]);
+  const connectedIntegrations = integrations.filter(i => i.status === "connected");
 
-  const addEntry = () => {
-    if (!newEntry.userId.trim()) {
-      toast({ title: "User ID required", variant: "destructive" });
-      return;
+  // Auto-fetch data when integrations are connected
+  useEffect(() => {
+    if (connectedCount > 0 || mode === "demo") {
+      setFetching(true);
+      const timer = setTimeout(() => {
+        const data = fetchMockAccessEntries();
+        setEntries(data);
+        setFetching(false);
+      }, 1200);
+      return () => clearTimeout(timer);
+    } else {
+      setEntries([]);
     }
-    setEntries(prev => [...prev, { ...newEntry, userId: newEntry.userId.trim() }]);
-    setNewEntry(prev => ({ ...prev, userId: "" }));
-  };
-
-  const removeEntry = (i: number) => setEntries(prev => prev.filter((_, idx) => idx !== i));
-
-  const loadDemo = () => {
-    setEntries(DEMO_ENTRIES);
-    toast({ title: "Demo data loaded", description: "7 sample access entries added." });
-  };
+  }, [connectedCount, mode]);
 
   const runSim = async () => {
     if (entries.length === 0) {
-      toast({ title: "No data", description: "Add access entries or upload a CSV first.", variant: "destructive" });
+      toast({ title: "No data available", description: "Connect integrations or enable Demo Mode first.", variant: "destructive" });
       return;
     }
     setRunning(true);
-    // Artificial delay for UX
-    await new Promise(r => setTimeout(r, 1500));
+    await new Promise(r => setTimeout(r, 2000));
     const result = runSimulation(entries);
     setResult(result);
     setRunning(false);
     navigate("/dashboard-demo");
   };
 
+  const hasData = entries.length > 0;
+  const showNoConnection = connectedCount === 0 && mode !== "demo";
+
   return (
     <Layout>
       <section className="relative min-h-screen">
-        <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-electric-blue/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-electric-purple/5 rounded-full blur-[120px]" />
-
+        <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-primary/5 rounded-full blur-[120px]" />
         <div className="section-padding relative z-10">
-          <AnimatedSection className="text-center mb-12">
+          <AnimatedSection className="text-center mb-10">
             <p className="text-sm font-medium text-primary mb-2 tracking-widest uppercase">Simulation Engine</p>
             <h1 className="font-display text-4xl sm:text-5xl font-bold mb-4">
-              Configure Your <span className="gradient-text">Simulation</span>
+              Run <span className="gradient-text">Risk Simulation</span>
             </h1>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              Upload organization access data or build it manually, then run the risk simulation engine.
+              Data is automatically ingested from your connected integrations via secure APIs.
             </p>
           </AnimatedSection>
 
           {/* Mode Toggle */}
-          <div className="flex justify-center gap-3 mb-8">
-            <Button
-              variant={mode === "csv" ? "default" : "outline"}
-              onClick={() => setMode("csv")}
-              className="gap-2"
-            >
-              <FileSpreadsheet className="w-4 h-4" /> Upload CSV
-            </Button>
-            <Button
-              variant={mode === "manual" ? "default" : "outline"}
-              onClick={() => setMode("manual")}
-              className="gap-2"
-            >
-              <PenTool className="w-4 h-4" /> Manual Config
-            </Button>
-          </div>
+          <AnimatedSection delay={0.05}>
+            <div className="flex justify-center mb-8">
+              <div className="inline-flex items-center gap-3 px-4 py-2.5 rounded-full border border-border/50 bg-card">
+                <span className={`text-sm font-medium ${mode === "demo" ? "text-foreground" : "text-muted-foreground"}`}>Demo Mode</span>
+                <Switch checked={mode === "live"} onCheckedChange={(v) => setMode(v ? "live" : "demo")} />
+                <span className={`text-sm font-medium ${mode === "live" ? "text-foreground" : "text-muted-foreground"}`}>Live Integration</span>
+              </div>
+            </div>
+          </AnimatedSection>
 
           <div className="max-w-4xl mx-auto">
-            {/* CSV Upload */}
-            {mode === "csv" && (
-              <AnimatedSection>
-                <div className="glass-card p-8 text-center">
-                  <Upload className="w-12 h-12 text-primary mx-auto mb-4" />
-                  <h3 className="font-display font-semibold text-foreground mb-2">Upload CSV File</h3>
-                  <p className="text-sm text-muted-foreground mb-6">
-                    Format: <code className="text-primary bg-primary/10 px-2 py-0.5 rounded text-xs">user_id,role,resource,permission</code>
-                  </p>
-                  <label className="btn-primary inline-flex items-center gap-2 cursor-pointer">
-                    <Upload className="w-4 h-4" /> Choose File
-                    <input type="file" accept=".csv" onChange={handleCSV} className="hidden" />
-                  </label>
+            {/* Data Source Status */}
+            <AnimatedSection delay={0.1}>
+              <div className="rounded-xl border border-border/50 bg-card p-6 mb-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-foreground text-sm flex items-center gap-2">
+                    <Database className="w-4 h-4 text-primary" /> Data Source
+                  </h3>
+                  <Badge variant="outline" className="gap-1.5 text-xs">
+                    <Wifi className="w-3 h-3" />
+                    {mode === "demo" ? "Demo API" : "Live Integration (API)"}
+                  </Badge>
+                </div>
+
+                {mode === "demo" && (
+                  <div className="text-sm text-muted-foreground bg-muted/20 rounded-lg p-4">
+                    <p className="mb-2">
+                      <span className="font-medium text-foreground">Demo Mode Active</span> — Using simulated API data from mock endpoints:
+                    </p>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
+                      {["/api/users", "/api/roles", "/api/permissions", "/api/activity-logs"].map(ep => (
+                        <code key={ep} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">{ep}</code>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {mode === "live" && connectedCount > 0 && (
+                  <div className="space-y-2">
+                    {connectedIntegrations.map(i => (
+                      <div key={i.id} className="flex items-center gap-3 text-sm p-2.5 rounded-lg bg-green-500/5">
+                        <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
+                        <span className="text-foreground font-medium">{i.name}</span>
+                        <span className="text-muted-foreground text-xs">— {i.dataDescription}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {showNoConnection && (
+                  <div className="text-center py-6">
+                    <Plug className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
+                    <p className="text-sm text-muted-foreground mb-3">No integrations connected. Connect your systems to ingest data.</p>
+                    <Link to="/integrations">
+                      <Button size="sm" className="gap-2">
+                        <Plug className="w-3.5 h-3.5" /> Go to Integrations
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </AnimatedSection>
+
+            {/* Data Health */}
+            {dataHealth && hasData && (
+              <AnimatedSection delay={0.15}>
+                <div className="rounded-xl border border-border/50 bg-card p-6 mb-6">
+                  <h3 className="font-semibold text-foreground text-sm flex items-center gap-2 mb-4">
+                    <CheckCircle2 className="w-4 h-4 text-primary" /> Data Validation
+                  </h3>
+                  <div className="flex items-center gap-6 mb-4">
+                    <div className="text-center">
+                      <p className={`text-3xl font-bold ${dataHealth.score >= 90 ? "text-green-500" : dataHealth.score >= 75 ? "text-yellow-500" : "text-red-500"}`}>
+                        {dataHealth.score}%
+                      </p>
+                      <p className="text-xs text-muted-foreground">Data Reliability</p>
+                    </div>
+                    <div className="flex-1 grid grid-cols-3 gap-3">
+                      <div className="text-center p-2 rounded-lg bg-muted/20">
+                        <p className="font-bold text-foreground">{dataHealth.totalRecords}</p>
+                        <p className="text-[10px] text-muted-foreground">Records</p>
+                      </div>
+                      <div className="text-center p-2 rounded-lg bg-muted/20">
+                        <p className="font-bold text-foreground">{dataHealth.duplicates}</p>
+                        <p className="text-[10px] text-muted-foreground">Duplicates</p>
+                      </div>
+                      <div className="text-center p-2 rounded-lg bg-muted/20">
+                        <p className="font-bold text-foreground">{dataHealth.missingFields}</p>
+                        <p className="text-[10px] text-muted-foreground">Missing</p>
+                      </div>
+                    </div>
+                  </div>
+                  {dataHealth.warnings.length > 0 && (
+                    <div className="space-y-1.5">
+                      {dataHealth.warnings.map((w, i) => (
+                        <div key={i} className="flex items-center gap-2 text-xs text-yellow-600 bg-yellow-500/10 px-3 py-1.5 rounded">
+                          <AlertTriangle className="w-3 h-3 shrink-0" /> {w}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </AnimatedSection>
             )}
 
-            {/* Manual Config */}
-            {mode === "manual" && (
+            {/* Fetched entries table */}
+            {fetching && (
               <AnimatedSection>
-                <div className="glass-card p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-display font-semibold text-foreground text-sm">Add Access Relationship</h3>
-                    <Button variant="outline" size="sm" onClick={loadDemo} className="text-xs">
-                      Load Demo Data
-                    </Button>
-                  </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-4">
-                    <Input
-                      placeholder="User ID (e.g. u1)"
-                      value={newEntry.userId}
-                      onChange={e => setNewEntry(prev => ({ ...prev, userId: e.target.value }))}
-                      className="bg-muted/30 border-border/50"
-                    />
-                    <Select value={newEntry.role} onValueChange={v => setNewEntry(prev => ({ ...prev, role: v }))}>
-                      <SelectTrigger className="bg-muted/30 border-border/50"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {DEMO_ROLES.map(r => <SelectItem key={r} value={r}>{r}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                    <Select value={newEntry.resource} onValueChange={v => setNewEntry(prev => ({ ...prev, resource: v }))}>
-                      <SelectTrigger className="bg-muted/30 border-border/50"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {DEMO_RESOURCES.map(r => <SelectItem key={r} value={r}>{r}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                    <Select value={newEntry.permission} onValueChange={v => setNewEntry(prev => ({ ...prev, permission: v }))}>
-                      <SelectTrigger className="bg-muted/30 border-border/50"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {PERMISSIONS.map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                    <Button onClick={addEntry} className="gap-1">
-                      <Plus className="w-4 h-4" /> Add
-                    </Button>
-                  </div>
+                <div className="rounded-xl border border-border/50 bg-card p-8 text-center mb-6">
+                  <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-3" />
+                  <p className="text-sm text-muted-foreground">Fetching data from API endpoints...</p>
                 </div>
               </AnimatedSection>
             )}
 
-            {/* Entries Table */}
-            {entries.length > 0 && (
+            {hasData && !fetching && (
               <AnimatedSection delay={0.1}>
-                <div className="glass-card p-6 mt-6">
-                  <h3 className="font-display font-semibold text-foreground text-sm mb-4 flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-primary" /> Access Entries ({entries.length})
+                <div className="rounded-xl border border-border/50 bg-card p-6 mb-6">
+                  <h3 className="font-semibold text-foreground text-sm mb-4 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-primary" /> Ingested Access Entries ({entries.length})
+                    <span className="ml-auto flex items-center gap-1.5 text-xs text-green-500">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" /> Live
+                    </span>
                   </h3>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
@@ -196,7 +203,6 @@ const Simulate = () => {
                           <th className="text-left py-2 text-muted-foreground font-medium">Role</th>
                           <th className="text-left py-2 text-muted-foreground font-medium">Resource</th>
                           <th className="text-left py-2 text-muted-foreground font-medium">Permission</th>
-                          <th className="w-10" />
                         </tr>
                       </thead>
                       <tbody>
@@ -205,6 +211,7 @@ const Simulate = () => {
                             key={i}
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: i * 0.03 }}
                             className="border-b border-border/10 hover:bg-muted/10"
                           >
                             <td className="py-2 text-foreground">{e.userId}</td>
@@ -215,14 +222,9 @@ const Simulate = () => {
                             <td className="py-2">
                               <span className={`text-xs px-2 py-0.5 rounded-full ${
                                 e.permission === "admin" ? "bg-destructive/20 text-destructive" :
-                                e.permission === "write" ? "bg-yellow-500/20 text-yellow-400" :
-                                "bg-green-500/20 text-green-400"
+                                e.permission === "write" ? "bg-yellow-500/20 text-yellow-600" :
+                                "bg-green-500/20 text-green-600"
                               }`}>{e.permission}</span>
-                            </td>
-                            <td>
-                              <button onClick={() => removeEntry(i)} className="text-muted-foreground hover:text-destructive transition-colors">
-                                <Trash2 className="w-4 h-4" />
-                              </button>
                             </td>
                           </motion.tr>
                         ))}
@@ -238,7 +240,7 @@ const Simulate = () => {
               <div className="mt-8 text-center">
                 <Button
                   onClick={runSim}
-                  disabled={running || entries.length === 0}
+                  disabled={running || !hasData}
                   size="lg"
                   className="btn-primary text-base gap-2 min-w-[220px]"
                 >
@@ -253,6 +255,11 @@ const Simulate = () => {
                     </>
                   )}
                 </Button>
+                {showNoConnection && (
+                  <p className="text-xs text-muted-foreground mt-3">
+                    Connect integrations or switch to Demo Mode to load data.
+                  </p>
+                )}
               </div>
             </AnimatedSection>
           </div>
