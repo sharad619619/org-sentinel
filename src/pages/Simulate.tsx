@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Play, Plug, Wifi, Database, ArrowRight, Loader2, CheckCircle2, AlertTriangle } from "lucide-react";
+import { Play, Plug, Wifi, Database, ArrowRight, Loader2, CheckCircle2, AlertTriangle, Building2 } from "lucide-react";
 import Layout from "@/components/Layout";
 import AnimatedSection from "@/components/AnimatedSection";
 import { Button } from "@/components/ui/button";
@@ -12,8 +12,10 @@ import { useIntegrations } from "@/context/IntegrationContext";
 import { runSimulation } from "@/lib/simulationEngine";
 import { fetchMockAccessEntries } from "@/lib/mockApiData";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/context/AuthContext";
 
 const Simulate = () => {
+  const { session } = useAuth();
   const [entries, setEntries] = useState<AccessEntry[]>([]);
   const [running, setRunning] = useState(false);
   const [fetching, setFetching] = useState(false);
@@ -61,6 +63,12 @@ const Simulate = () => {
         <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-primary/5 rounded-full blur-[120px]" />
         <div className="section-padding relative z-10">
           <AnimatedSection className="text-center mb-10">
+            {session && (
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-sm font-medium text-primary mb-4">
+                <Building2 className="w-3.5 h-3.5" />
+                {session.companyName}
+              </div>
+            )}
             <p className="text-sm font-medium text-primary mb-2 tracking-widest uppercase">Simulation Engine</p>
             <h1 className="font-display text-4xl sm:text-5xl font-bold mb-4">
               Run <span className="gradient-text">Risk Simulation</span>
