@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Wifi, Database } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import Layout from "@/components/Layout";
 import AnimatedSection from "@/components/AnimatedSection";
 import { useSimulation } from "@/context/SimulationContext";
@@ -93,11 +94,18 @@ const DashboardDemo = () => {
                 {isLive ? "Live Simulation" : "Live Demo"}
               </p>
               {isLive && (
-                <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-0.5 rounded-full bg-green-500/20 text-green-400">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-0.5 rounded-full bg-green-500/20 text-green-600">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                   Dynamic
                 </span>
               )}
+            </div>
+            {/* Data Source Badge */}
+            <div className="flex justify-center mb-3">
+              <Badge variant="outline" className="gap-1.5 text-xs">
+                <Wifi className="w-3 h-3" />
+                Source: {isLive ? "Live Integration (API)" : "Demo Data (API)"}
+              </Badge>
             </div>
             <h1 className="font-display text-4xl sm:text-5xl font-bold mb-4">
               Risk <span className="gradient-text">Dashboard</span>
