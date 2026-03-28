@@ -12,8 +12,10 @@ import { useIntegrations } from "@/context/IntegrationContext";
 import { runSimulation } from "@/lib/simulationEngine";
 import { fetchMockAccessEntries } from "@/lib/mockApiData";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/context/AuthContext";
 
 const Simulate = () => {
+  const { session } = useAuth();
   const [entries, setEntries] = useState<AccessEntry[]>([]);
   const [running, setRunning] = useState(false);
   const [fetching, setFetching] = useState(false);
