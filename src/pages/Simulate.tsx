@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Play, Plug, Wifi, Database, ArrowRight, Loader2, CheckCircle2, AlertTriangle } from "lucide-react";
+import { Play, Plug, Wifi, Database, ArrowRight, Loader2, CheckCircle2, AlertTriangle, Building2 } from "lucide-react";
 import Layout from "@/components/Layout";
 import AnimatedSection from "@/components/AnimatedSection";
 import { Button } from "@/components/ui/button";
