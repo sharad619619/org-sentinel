@@ -63,6 +63,12 @@ const Simulate = () => {
         <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-primary/5 rounded-full blur-[120px]" />
         <div className="section-padding relative z-10">
           <AnimatedSection className="text-center mb-10">
+            {session && (
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-sm font-medium text-primary mb-4">
+                <Building2 className="w-3.5 h-3.5" />
+                {session.companyName}
+              </div>
+            )}
             <p className="text-sm font-medium text-primary mb-2 tracking-widest uppercase">Simulation Engine</p>
             <h1 className="font-display text-4xl sm:text-5xl font-bold mb-4">
               Run <span className="gradient-text">Risk Simulation</span>
